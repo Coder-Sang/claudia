@@ -1,6 +1,7 @@
 import React, { Suspense, lazy, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTabState } from "@/hooks/useTabState";
+import { useScreenTracking } from '@/hooks/useAnalytics';
 import { Tab } from "@/contexts/TabContext";
 import { Loader2, Plus } from "lucide-react";
 import { api, type Project, type Session, type ClaudeMdFile } from "@/lib/api";
@@ -8,7 +9,7 @@ import { ProjectList } from "@/components/ProjectList";
 import { SessionList } from "@/components/SessionList";
 import { RunningClaudeSessions } from "@/components/RunningClaudeSessions";
 import { Button } from "@/components/ui/button";
-import { SearchProject } from "./SearchProject";
+import { SearchProject } from "@/components/SearchProject";
 
 // Lazy load heavy components
 const ClaudeCodeSession = lazy(() =>
@@ -60,6 +61,9 @@ const TabPanel: React.FC<TabPanelProps> = ({ tab, isActive }) => {
   );
   const [sessions, setSessions] = React.useState<Session[]>([]);
   const [loading, setLoading] = React.useState(false);
+  
+  // Track screen when tab becomes active
+  useScreenTracking(isActive ? tab.type : undefined, isActive ? tab.id : undefined);
   const [error, setError] = React.useState<string | null>(null);
   const [searchKeyword, setSearchKeyword] = React.useState("");
   const filterProjects = projects.filter((project) => {

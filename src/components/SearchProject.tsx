@@ -24,12 +24,15 @@ export function SearchProject({
         if (modKey) {
           switch (e.key) {
             case "f":
-              e.preventDefault();
+              if (isActive) {
+                e.preventDefault();
+              }
               setShow(!show);
               break;
           }
-        
-      }
+        } else if (e.key === "Escape") {
+          setShow(false);
+        }
     };
 
     window.addEventListener("keydown", handleKeyDown);
